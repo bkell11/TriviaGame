@@ -2,8 +2,10 @@ var gameOver = false;
 var correctAnswer = 0;
 var incorrectAnswer = 0;
 var questionsAnswered = 0;
-var userAnswer = "";
+var userAnswer = null;
 var currentQuestion;
+var timerId;
+var timeLeft;
 var gameInfo = [
     { question: "Which main character wears licorice in her hair?", rightAnswer: "Vanellope von Schweetz", answerOptions: ["Elsa", "Snow White", "Vanellope von Schweetz", "Princess Poppy"], image: "assets/images/Vanellope.png" },
     { question: "What movie does Denzel Washington NOT play in?", rightAnswer: "I Am Legend", answerOptions: ["I Am Legend", "Two Guns", "Training Day", "The Equalizer"], image: "assets/images/I_Am_Legend.jpg" },
@@ -12,20 +14,20 @@ var gameInfo = [
     { question: "In this 2008 film the villain asks, \"Why so serious?\"", rightAnswer: "The Dark Knight", answerOptions: ["Hancock", "The Dark Knight", "Iron Man", "The Incredible Hulk"], image: "assets/images/Joker.jpg" },
     { question: "Which Disney Princess has to restore the heart of Tafiti?", rightAnswer: "Moana", answerOptions: ["Rapunzel", "Moana", "Merida", "Pocahontas"], image: "assets/images/Moana.png" },
     { question: "Which movie character said \"Your lack of faith is disturbing.\"?", rightAnswer: "Darth Vader", answerOptions: ["Darth Vader", "Yoda", "Luke Skywalker", "Boba Fett"], image: "assets/images/Darth_Vader.jpg" },
-    { question: "In what movie, does the bear become vulgar and immature?", rightAnswer: "Ted", answerOptions: ["The Jungle Book", "Winnie The Pooh", "Kung Fu Panda", "Ted"], image: "assets/images.Ted.jpg" },
+    { question: "In what movie, does the bear become vulgar and immature?", rightAnswer: "Ted", answerOptions: ["The Jungle Book", "Winnie The Pooh", "Kung Fu Panda", "Ted"], image: "assets/images/Ted.jpg" },
 ];
 
 
 $(document).ready(function () {
     startGame();
     $("#reset").hide();
-    questionTimer();
     $("#answer-a").on("click", 0, onAnswerSelected);
     $("#answer-b").on("click", 1, onAnswerSelected);
     $("#answer-c").on("click", 2, onAnswerSelected);
     $("#answer-d").on("click", 3, onAnswerSelected);
     $("#reset").on("click", function () {
         restartGame();
+        $("#reset").hide();
     });
 });
 
@@ -35,7 +37,9 @@ function onAnswerSelected(event) {
 };
 
 function startGame() {
-    questionTimer();
+    timeLeft = 5;
+    clearInterval(timerId);
+    timerId = setInterval(countdown, 1000);
     currentQuestion = gameInfo[questionsAnswered];
     $("#question").text(currentQuestion.question);
     $("#answer-a").text(currentQuestion.answerOptions[0]);
@@ -64,60 +68,55 @@ function userGuess() {
         incorrectAnswer++;
     }
     var image = $("#trivia-image");
-    image.src = currentQuestion.image;
+    image.attr("src", currentQuestion.image);
     questionsAnswered++;
 
     if (questionsAnswered !== 8) {
+        clearInterval(timerId);
+        $("#time-clock").text("");
+        userAnswer = null;
         setTimeout(function () { startGame(); }, 5000);
     }
     else {
         gameOver = true;
+        clearInterval(timerId)
+        $("#time-clock").text("");
         $("#reset").show();
     }
 };
 
 function restartGame() {
-    var gameOver = false;
-    var correctAnswer = 0;
-    var incorrectAnswer = 0;
-    var questionsAnswered = 0;
-    var userAnswer;
-    var currentQuestion;
+    gameOver = false;
+    correctAnswer = 0;
+    incorrectAnswer = 0;
+    questionsAnswered = 0;
+    userAnswer = null;
     startGame();
-    $("#answer-a").on("click", 0, onAnswerSelected);
-    $("#answer-b").on("click", 1, onAnswerSelected);
-    $("#answer-c").on("click", 2, onAnswerSelected);
-    $("#answer-d").on("click", 3, onAnswerSelected);
-
 };
 
-
-
-function questionTimer() {
-    var timeLeft = 5;
-    var timerId = setInterval(countdown, 1000);
-
-    function countdown() {
-        if (timeLeft == 0) {
-            clearTimeout(timerId);
+function countdown() {
+    if (timeLeft == 0) {
+        clearInterval(timerId);
+        $("#time-clock").text("Time is up");
+        $("#question").text("The correct answer is " + currentQuestion.rightAnswer + ".");
+        $("#answer-a").text("");
+        $("#answer-b").text("");
+        $("#answer-c").text("");
+        $("#answer-d").text("");
+        var image = $("#trivia-image");
+        image.attr("src", currentQuestion.image);
+        questionsAnswered++
+        setTimeout(function () { startGame(); }, 5000);
+        if (questionsAnswered == 8) {
+            gameOver = true;
+            clearInterval(timerId);
             $("#time-clock").text("Time is up");
-            $("#question").text("The correct answer is " + currentQuestion.rightAnswer + ".");
-            $("#answer-a").text("");
-            $("#answer-b").text("");
-            $("#answer-c").text("");
-            $("#answer-d").text("");
-            // questionsAnswered++
-            setTimeout(function () { startGame(); }, 5000);
+            $("#reset").show();
         }
+    }
 
-        else if (userAnswer !== "") {
-            clearTimeout(timerId);
-            $("time-clock").text("");
-        }
-
-        else {
-            $("#time-clock").text(timeLeft + " seconds remaining.");
-            timeLeft--;
-        }
-    };
+    else {
+        $("#time-clock").text(timeLeft + " seconds remaining.");
+        timeLeft--;
+    }
 };
