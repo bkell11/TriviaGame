@@ -2,10 +2,10 @@ var gameOver = false;
 var correctAnswer = 0;
 var incorrectAnswer = 0;
 var questionsAnswered = 0;
-var userAnswer;
+var userAnswer = "";
 var currentQuestion;
 var gameInfo = [
-    { question: "Which main character wears licorice in her hair?", rightAnswer: "Vanellpe von Schweetz", answerOptions: ["Elsa", "Snow White", "Vanellpe von Schweetz", "Princess Poppy"], image: "assets/images/Vanellope.png" },
+    { question: "Which main character wears licorice in her hair?", rightAnswer: "Vanellope von Schweetz", answerOptions: ["Elsa", "Snow White", "Vanellope von Schweetz", "Princess Poppy"], image: "assets/images/Vanellope.png" },
     { question: "What movie does Denzel Washington NOT play in?", rightAnswer: "I Am Legend", answerOptions: ["I Am Legend", "Two Guns", "Training Day", "The Equalizer"], image: "assets/images/I_Am_Legend.jpg" },
     { question: "Which character has a reindeer as their best friend?", rightAnswer: "Kristoff", answerOptions: ["Flynn Rider", "Shrek", "Lilo", "Kristoff"], image: "assets/images/Kristoff.jpg" },
     { question: "In what movie, do two friends make up identities to get girls?", rightAnswer: "Wedding Crashers", answerOptions: ["Hitch", "Crazy Stupid Love", "Wedding Crashers", "How To Lose A Guy In 10 Days"], image: "assets/images/Wedding_Crashers.jpg" },
@@ -19,7 +19,7 @@ var gameInfo = [
 $(document).ready(function () {
     startGame();
     $("#reset").hide();
-    // questionTimer();
+    questionTimer();
     $("#answer-a").on("click", 0, onAnswerSelected);
     $("#answer-b").on("click", 1, onAnswerSelected);
     $("#answer-c").on("click", 2, onAnswerSelected);
@@ -35,7 +35,7 @@ function onAnswerSelected(event) {
 };
 
 function startGame() {
-
+    questionTimer();
     currentQuestion = gameInfo[questionsAnswered];
     $("#question").text(currentQuestion.question);
     $("#answer-a").text(currentQuestion.answerOptions[0]);
@@ -52,8 +52,6 @@ function userGuess() {
         $("#answer-b").text("");
         $("#answer-c").text("");
         $("#answer-d").text("");
-        var image = $("#trivia-image");
-        image.src = currentQuestion.image;
         correctAnswer++;
     }
 
@@ -63,19 +61,19 @@ function userGuess() {
         $("#answer-b").text("");
         $("#answer-c").text("");
         $("#answer-d").text("");
-        var image = $("#trivia-image");
-        image.src = currentQuestion.image;
         incorrectAnswer++;
     }
+    var image = $("#trivia-image");
+    image.src = currentQuestion.image;
     questionsAnswered++;
 
-    // if (questionsAnswered !== 8) {
-    //     startGame();
-    // }
-    // else {
-    //     gameOver = true;
-    //     $("#reset").show();
-    // }
+    if (questionsAnswered !== 8) {
+        setTimeout(function () { startGame(); }, 5000);
+    }
+    else {
+        gameOver = true;
+        $("#reset").show();
+    }
 };
 
 function restartGame() {
@@ -96,14 +94,27 @@ function restartGame() {
 
 
 function questionTimer() {
-    var timeLeft = 20;
+    var timeLeft = 5;
     var timerId = setInterval(countdown, 1000);
 
     function countdown() {
         if (timeLeft == 0) {
             clearTimeout(timerId);
             $("#time-clock").text("Time is up");
+            $("#question").text("The correct answer is " + currentQuestion.rightAnswer + ".");
+            $("#answer-a").text("");
+            $("#answer-b").text("");
+            $("#answer-c").text("");
+            $("#answer-d").text("");
+            // questionsAnswered++
+            setTimeout(function () { startGame(); }, 5000);
         }
+
+        else if (userAnswer !== "") {
+            clearTimeout(timerId);
+            $("time-clock").text("");
+        }
+
         else {
             $("#time-clock").text(timeLeft + " seconds remaining.");
             timeLeft--;
