@@ -38,7 +38,7 @@ function onAnswerSelected(event) {
 
 function startGame() {
     $("#time-clock").text("");
-    timeLeft = 5;
+    timeLeft = 20;
     clearInterval(timerId);
     timerId = setInterval(countdown, 1000);
     var image = $("#trivia-image");
@@ -54,7 +54,7 @@ function startGame() {
 
 function userGuess() {
     if (userAnswer == currentQuestion.rightAnswer) {
-        $("#question").text("You answered this question correctly!");
+        $("#question").html(currentQuestion.rightAnswer + "<br />You answered this question correctly!");
         $("#answer-a").text("");
         $("#answer-b").text("");
         $("#answer-c").text("");
@@ -131,7 +131,7 @@ function endGame() {
     var image = $("#trivia-image");
     image.attr("src", "assets/images/Game_Over.jpg")
     $("#time-clock").text("");
-    var resultsDisplay = "You answered " + correctAnswer + " questions correctly.<br />You answered " + incorrectAnswer + " questions incorrectly.";
+    var resultsDisplay = "Answers you guessed correctly: " + correctAnswer + "<br />Answers you guessed incorrectly: " + incorrectAnswer;
     $("#question").html(resultsDisplay);
     $("#reset").show();
 }

@@ -7,14 +7,48 @@ h1, #time-clock, #question, #answer-a, #answer-b, #answer-c, #answer-d{
     color: #9e09b7;
 }
 
+h1{
+    margin-bottom: 15px;
+    font-weight: bolder;
+}
+
+h1, #question{
+    font-family: Times, Times New Roman, serif;
+}
+
+#time-clock{
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 25px;
+}
+
+#question{
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
 #image, #reset{
     text-align: center;
 }
 
-#answer-a:hover{
+#answer-a:hover, #answer-c:hover{
         background-color: aliceblue;
+        margin: auto;
+        width: 400px;
+}
+
+#answer-b:hover, #answer-d:hover{
+    background-color: #3badad7d;
+    margin: auto;
+    width: 400px;
 }
 
 #trivia-image{
-    height: 400px;
+    height: 350px;
+}
+
+#answer-a, #answer-b, #answer-c, #answer-d{
+    font-weight: bold;
+    font-size: 20px;
 }
