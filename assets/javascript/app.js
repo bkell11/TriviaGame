@@ -37,9 +37,12 @@ function onAnswerSelected(event) {
 };
 
 function startGame() {
+    $("#time-clock").text("");
     timeLeft = 5;
     clearInterval(timerId);
     timerId = setInterval(countdown, 1000);
+    var image = $("#trivia-image");
+    image.attr("src", "assets/images/Movie_Trivia.jpg")
     currentQuestion = gameInfo[questionsAnswered];
     $("#question").text(currentQuestion.question);
     $("#answer-a").text(currentQuestion.answerOptions[0]);
@@ -71,17 +74,16 @@ function userGuess() {
     image.attr("src", currentQuestion.image);
     questionsAnswered++;
 
-    if (questionsAnswered !== 8) {
+    if (questionsAnswered != 8) {
         clearInterval(timerId);
         $("#time-clock").text("");
         userAnswer = null;
         setTimeout(function () { startGame(); }, 5000);
     }
     else {
-        gameOver = true;
-        clearInterval(timerId)
+        clearInterval(timerId);
         $("#time-clock").text("");
-        $("#reset").show();
+        setTimeout(function () { endGame(); }, 5000);
     }
 };
 
@@ -91,14 +93,14 @@ function restartGame() {
     incorrectAnswer = 0;
     questionsAnswered = 0;
     userAnswer = null;
-    $("#trivia-game").attr("src", "assets/images/Movie_Trivia.png");
+    $("#time-clock").text("");
     startGame();
 };
 
 function countdown() {
     if (timeLeft == 0) {
         clearInterval(timerId);
-        $("#time-clock").text("Time is up");
+        $("#time-clock").text("Time is up!");
         $("#question").text("The correct answer is " + currentQuestion.rightAnswer + ".");
         $("#answer-a").text("");
         $("#answer-b").text("");
@@ -107,12 +109,13 @@ function countdown() {
         var image = $("#trivia-image");
         image.attr("src", currentQuestion.image);
         questionsAnswered++
-        setTimeout(function () { startGame(); }, 5000);
+        incorrectAnswer++
+
         if (questionsAnswered == 8) {
-            gameOver = true;
-            clearInterval(timerId);
-            $("#time-clock").text("");
-            $("#reset").show();
+            setTimeout(function () { endGame(); }, 5000);
+        }
+        else {
+            setTimeout(function () { startGame(); }, 5000);
         }
     }
 
@@ -121,3 +124,14 @@ function countdown() {
         timeLeft--;
     }
 };
+
+function endGame() {
+    gameOver = true;
+    clearInterval(timerId);
+    var image = $("#trivia-image");
+    image.attr("src", "assets/images/Game_Over.jpg")
+    $("#time-clock").text("");
+    var resultsDisplay = "You answered " + correctAnswer + " questions correctly.<br />You answered " + incorrectAnswer + " questions incorrectly.";
+    $("#question").html(resultsDisplay);
+    $("#reset").show();
+}

@@ -14,3 +14,7 @@ h1, #time-clock, #question, #answer-a, #answer-b, #answer-c, #answer-d{
 #answer-a:hover{
         background-color: aliceblue;
 }
+
+#trivia-image{
+    height: 400px;
+}
