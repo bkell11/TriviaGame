@@ -1,0 +1,16 @@
+body{
+    background-image: url(../images/Pentagon.png);
+}
+
+h1, #time-clock, #question, #answer-a, #answer-b, #answer-c, #answer-d{
+    text-align: center;
+    color: #9e09b7;
+}
+
+#image, #reset{
+    text-align: center;
+}
+
+#answer-a:hover{
+        background-color: aliceblue;
+}

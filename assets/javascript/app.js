@@ -91,6 +91,7 @@ function restartGame() {
     incorrectAnswer = 0;
     questionsAnswered = 0;
     userAnswer = null;
+    $("#trivia-game").attr("src", "assets/images/Movie_Trivia.png");
     startGame();
 };
 
@@ -110,7 +111,7 @@ function countdown() {
         if (questionsAnswered == 8) {
             gameOver = true;
             clearInterval(timerId);
-            $("#time-clock").text("Time is up");
+            $("#time-clock").text("");
             $("#reset").show();
         }
     }
